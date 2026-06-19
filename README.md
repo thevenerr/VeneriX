@@ -8,7 +8,7 @@ A lightweight C++ game engine built from scratch, wrapping OpenGL, GLFW, and Dea
 ![C++](https://img.shields.io/badge/C%2B%2B-17-00BCD4)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
 
-[Documentation](https://thevenerr.github.io/VeneriX/) · [SDK](https://github.com/thevenerr/VeneriX_SDK) · [Report a bug](../../issues)
+[Documentation](https://thevenerr.github.io/VeneriX/api.html) · [SDK](https://github.com/thevenerr/VeneriX_SDK) · [Report a bug](../../issues)
 
 </div>
 
