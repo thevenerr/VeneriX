@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeneriX — Engine Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #7C4DFF;
+    --accent2: #00BCD4;
+    --header-h: 60px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---------- header ---------- */
+  header.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo-text span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .topbar-spacer { flex: 1; }
+
+  .topbar-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .topbar-link:hover { color: var(--accent2); }
+
+  /* ---------- layout ---------- */
+  .layout {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ---------- sidebar ---------- */
+  nav.sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+    padding: 32px 16px;
+    border-right: 1px solid var(--border);
+  }
+
+  .nav-group { margin-bottom: 24px; }
+
+  .nav-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    padding: 0 12px;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 6px 12px;
+    font-size: 13.5px;
+    color: var(--muted);
+    border-radius: 6px;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    text-decoration: none;
+    background: var(--surface);
+  }
+
+  .nav-link.active {
+    color: var(--text);
+    border-left-color: var(--accent);
+    background: var(--surface);
+  }
+
+  /* ---------- main content ---------- */
+  main {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 40px 120px;
+  }
+
+  section { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+  .hero {
+    margin-bottom: 64px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 60%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p.lead {
+    font-size: 17px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 620px;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(124, 77, 255, 0.12);
+    color: var(--accent);
+    border: 1px solid rgba(124, 77, 255, 0.3);
+  }
+
+  h2.section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding-top: 56px;
+    color: var(--text);
+  }
+
+  h2.section-title .num {
+    color: var(--accent);
+    margin-right: 10px;
+  }
+
+  p.section-desc {
+    color: var(--muted);
+    margin-bottom: 28px;
+    max-width: 680px;
+  }
+
+  h3.sub-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 36px 0 14px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 16px; color: var(--text); }
+  p.muted { color: var(--muted); }
+
+  ul, ol { margin: 0 0 16px 22px; color: var(--text); }
+  li { margin-bottom: 6px; }
+
+  /* ---------- code blocks ---------- */
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  pre code {
+    color: #e6edf3;
+    white-space: pre;
+  }
+
+  code.inline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 13px;
+    color: var(--accent2);
+  }
+
+  /* simple syntax accents */
+  .tok-kw { color: #ff7b72; }
+  .tok-type { color: #79c0ff; }
+  .tok-str { color: #a5d6ff; }
+  .tok-com { color: #8b949e; }
+  .tok-fn { color: #d2a8ff; }
+
+  /* ---------- api cards ---------- */
+  .api-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 26px;
+    margin-bottom: 24px;
+  }
+
+  .api-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .api-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .api-card-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 12px;
+    background: rgba(0, 188, 212, 0.12);
+    color: var(--accent2);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+  }
+
+  .api-card-desc {
+    color: var(--muted);
+    margin-bottom: 18px;
+    font-size: 14.5px;
+  }
+
+  table.method-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+
+  table.method-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.method-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  table.method-table tr:last-child td { border-bottom: none; }
+
+  table.method-table code {
+    font-size: 13px;
+    color: var(--accent2);
+  }
+
+  .member-table { margin-top: 6px; }
+
+  /* ---------- step list ---------- */
+  .steps {
+    counter-reset: step;
+    margin: 24px 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(124, 77, 255, 0.15);
+    border: 1px solid rgba(124, 77, 255, 0.4);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .step-content { flex: 1; padding-top: 3px; }
+  .step-content h4 {
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  /* ---------- arch diagram ---------- */
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 28px 0;
+  }
+
+  .arch-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .arch-box.b-app { border-color: rgba(124,77,255,0.5); color: var(--accent); }
+  .arch-box.b-scene { border-color: rgba(0,188,212,0.5); color: var(--accent2); }
+
+  .arch-arrow { color: var(--muted); font-size: 18px; }
+
+  /* ---------- footer ---------- */
+  footer {
+    padding: 40px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 900px) {
+    nav.sidebar { display: none; }
+    main { padding: 32px 20px 100px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <img class="logo-mark" src="logo.png" alt="VeneriX logo" style="object-fit: contain; border-radius: 6px;">
+  <span class="logo-text">Veneri<span>X</span></span>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-link" href="index.html">Home</a>
+  <a class="topbar-link" href="https://github.com/thevenerr/VeneriX" target="_blank">GitHub ↗</a>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Getting started</div>
+      <a class="nav-link" href="#introduction">Introduction</a>
+      <a class="nav-link" href="#quick-start">Quick start</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Concepts</div>
+      <a class="nav-link" href="#architecture">Architecture</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API reference</div>
+      <a class="nav-link" href="#api-application">Application</a>
+      <a class="nav-link" href="#api-scene">Scene</a>
+      <a class="nav-link" href="#api-entity">Entity</a>
+      <a class="nav-link" href="#api-component">Component</a>
+      <a class="nav-link" href="#api-timestep">TimeStep</a>
+      <a class="nav-link" href="#api-input">Input</a>
+      <a class="nav-link" href="#api-renderer">Renderer</a>
+      <a class="nav-link" href="#api-camera">Camera</a>
+      <a class="nav-link" href="#api-texture2d">Texture2D</a>
+      <a class="nav-link" href="#api-audio">Audio</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Examples</div>
+      <a class="nav-link" href="#ex-scene">Creating a scene</a>
+      <a class="nav-link" href="#ex-component">Custom component</a>
+      <a class="nav-link" href="#ex-input">Handling input</a>
+      <a class="nav-link" href="#ex-timescale">Controlling time scale</a>
+      <a class="nav-link" href="#ex-render">Rendering cubes &amp; textures</a>
+      <a class="nav-link" href="#ex-audio">Playing sound</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero" id="introduction">
+      <div class="hero-eyebrow">// engine documentation</div>
+      <h1>VeneriX</h1>
+      <p class="lead">VeneriX is a lightweight C++ game engine built from scratch as a learning project. It wraps OpenGL rendering, GLFW windowing, and Dear ImGui debug tooling behind a small, scene-based API so you can focus on game logic instead of boilerplate.</p>
+      <div class="badge-row">
+        <span class="badge">C++17</span>
+        <span class="badge">OpenGL 3.3</span>
+        <span class="badge">GLFW</span>
+        <span class="badge">GLM</span>
+        <span class="badge">Dear ImGui</span>
+        <span class="badge">miniaudio</span>
+      </div>
+    </section>
+
+    <section id="quick-start">
+      <h2 class="section-title"><span class="num">01</span>Quick start</h2>
+      <p class="section-desc">A minimal VeneriX application using the compiled SDK (<code class="inline">VeneriX_SDK/include</code> and <code class="inline">VeneriX_SDK/lib</code>).</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Include the engine header</h4>
+            <p class="muted">A single header pulls in the whole public API.</p>
+            <pre><code><span class="tok-kw">#include</span> <span class="tok-str">&lt;VeneriX.h&gt;</span>
+<span class="tok-kw">#include</span> <span class="tok-str">&lt;EntryPoint.h&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Create a scene</h4>
+            <p class="muted">Subclass <code class="inline">Scene</code> and override <code class="inline">Update</code>, <code class="inline">Render</code>, and <code class="inline">RenderUI</code> as needed.</p>
+            <pre><code><span class="tok-kw">class</span> <span class="tok-type">MyScene</span> : <span class="tok-kw">public</span> <span class="tok-type">Scene</span> {
+<span class="tok-kw">public</span>:
+    <span class="tok-fn">MyScene</span>() : <span class="tok-type">Scene</span>(<span class="tok-str">"My Scene"</span>) {}
+
+    <span class="tok-kw">void</span> <span class="tok-fn">Render</span>() <span class="tok-kw">override</span> {
+        <span class="tok-com">// draw your world here</span>
+    }
+};</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Create your application</h4>
+            <p class="muted">Subclass <code class="inline">VeneriX::Application</code> and assign your scene in the constructor.</p>
+            <pre><code><span class="tok-kw">class</span> <span class="tok-type">MyApp</span> : <span class="tok-kw">public</span> <span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span> {
+<span class="tok-kw">public</span>:
+    <span class="tok-fn">MyApp</span>(<span class="tok-kw">const</span> <span class="tok-type">VeneriX</span>::<span class="tok-type">ApplicationSpecification</span>&amp; spec)
+        : <span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span>(spec) {
+        <span class="tok-fn">SetScene</span>(<span class="tok-kw">new</span> <span class="tok-type">MyScene</span>());
+    }
+};</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Implement the entry point factory</h4>
+            <p class="muted">The engine's <code class="inline">main()</code> (defined in <code class="inline">EntryPoint.h</code>) calls this function to obtain your application instance.</p>
+            <pre><code><span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span>* <span class="tok-type">VeneriX</span>::<span class="tok-fn">CreateApplication</span>() {
+    <span class="tok-type">VeneriX</span>::<span class="tok-type">ApplicationSpecification</span> spec;
+    spec.Name   = <span class="tok-str">"My Game"</span>;
+    spec.Width  = <span class="tok-com">1280</span>;
+    spec.Height = <span class="tok-com">720</span>;
+
+    <span class="tok-kw">return</span> <span class="tok-kw">new</span> <span class="tok-type">MyApp</span>(spec);
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Build and run</h4>
+            <p class="muted">Link against <code class="inline">venerix</code> (and <code class="inline">glm</code>, <code class="inline">imgui</code>), make sure <code class="inline">venerix.dll</code> and its dependencies (e.g. <code class="inline">glfw3.dll</code>) sit next to your executable, then run the binary. The window opens and your scene's <code class="inline">Update</code>/<code class="inline">Render</code> loop starts automatically.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2 class="section-title"><span class="num">02</span>Architecture</h2>
+      <p class="section-desc">VeneriX follows a small, explicit object hierarchy rather than a full ECS. Each layer owns the one below it.</p>
+
+      <div class="arch-flow">
+        <span class="arch-box b-app">Application</span>
+        <span class="arch-arrow">→</span>
+        <span class="arch-box b-scene">Scene</span>
+        <span class="arch-arrow">→</span>
+        <span class="arch-box">Entity</span>
+        <span class="arch-arrow">→</span>
+        <span class="arch-box">Component</span>
+      </div>
+
+      <p><code class="inline">Application</code> owns the GLFW window, the ImGui context, and the single active <code class="inline">Scene</code>. Every frame it computes a <code class="inline">TimeStep</code>, then calls, in order: <code class="inline">Scene::UpdateEntities</code> (which updates every <code class="inline">Entity</code> and in turn every <code class="inline">Component</code> attached to it), <code class="inline">Scene::Update</code> (your own game logic), and <code class="inline">Scene::Render</code>.</p>
+
+      <p>Because the engine calls <code class="inline">UpdateEntities</code> for you, you never need to manually loop over entities or call <code class="inline">Scene::Update</code> on the base class — overriding <code class="inline">Update</code> in your scene only needs to contain logic that isn't already handled by your components.</p>
+
+      <h3 class="sub-title">TimeStep &amp; time scale</h3>
+      <p>Every frame, <code class="inline">Application</code> computes a <code class="inline">TimeStep</code> struct containing both the real (<code class="inline">Unscaled</code>) and scaled (<code class="inline">Delta</code>) frame time. Calling <code class="inline">SetTimeScale</code> changes how fast <code class="inline">Delta</code> advances relative to real time — useful for pause menus, slow motion, or fast-forward effects — without affecting <code class="inline">Unscaled</code>, which always reflects real elapsed time.</p>
+    </section>
+
+    <section id="api-application">
+      <h2 class="section-title"><span class="num">03</span>API reference</h2>
+      <p class="section-desc">Public classes and methods exposed by the engine, taken directly from the headers in <code class="inline">src/</code>.</p>
+
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Application</span>
+          <span class="api-card-tag">Application.h</span>
+        </div>
+        <p class="api-card-desc">Owns the window, the ImGui context, and the main loop. Subclass it to bootstrap your game; access the running instance anywhere via the static <code class="inline">Get()</code> accessor.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Application(const ApplicationSpecification&amp; spec = {})</code></td><td>Creates the GLFW window, initializes the renderer, audio system, and ImGui.</td></tr>
+          <tr><td><code>void Run()</code></td><td>Starts the main loop: computes the <code class="inline">TimeStep</code>, updates and renders the current scene, and renders ImGui each frame until the window is closed.</td></tr>
+          <tr><td><code>void SetScene(Scene* scene)</code></td><td>Assigns the active scene that <code class="inline">Run()</code> will update and render.</td></tr>
+          <tr><td><code>void SetTimeScale(float scale)</code></td><td>Sets the global time scale multiplier applied to <code class="inline">TimeStep::Delta</code>.</td></tr>
+          <tr><td><code>float GetTimeScale() const</code></td><td>Returns the current time scale.</td></tr>
+          <tr><td><code>const TimeStep&amp; GetTimeStep() const</code></td><td>Returns the most recently computed <code class="inline">TimeStep</code>.</td></tr>
+          <tr><td><code>static Application* Get()</code></td><td>Returns the single running <code class="inline">Application</code> instance, accessible from anywhere (scenes, components).</td></tr>
+          <tr><td><code>ImGuiContext* GetImGuiContext()</code></td><td>Returns the ImGui context created by the application; used by <code class="inline">EntryPoint.h</code> to share the context with the executable.</td></tr>
+        </table>
+      </div>
+
+      <h3 class="sub-title">ApplicationSpecification</h3>
+      <p>A plain struct passed to the <code class="inline">Application</code> constructor to configure the window.</p>
+      <table class="method-table member-table">
+        <tr><th>Field</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>std::string Name</code></td><td><code>"VeneriX Application"</code></td><td>Window title.</td></tr>
+        <tr><td><code>uint32_t Width</code></td><td><code>1280</code></td><td>Window width in pixels.</td></tr>
+        <tr><td><code>uint32_t Height</code></td><td><code>720</code></td><td>Window height in pixels.</td></tr>
+      </table>
+    </section>
+
+    <section id="api-scene">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">Scene</span>
+          <span class="api-card-tag">Scene.h</span>
+        </div>
+        <p class="api-card-desc">Owns a list of entities and defines the per-frame hooks your game overrides. Created with a name and assigned to the <code class="inline">Application</code> via <code class="inline">SetScene</code>.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Scene(std::string sceneName)</code></td><td>Constructs a scene with the given display name (stored in the public <code class="inline">name</code> field).</td></tr>
+          <tr><td><code>Entity* CreateEntity(const std::string&amp; entityName)</code></td><td>Creates a new <code class="inline">Entity</code> owned by the scene and returns a raw pointer to it.</td></tr>
+          <tr><td><code>void UpdateEntities(const TimeStep&amp; ts)</code></td><td>Called automatically by <code class="inline">Application::Run()</code> every frame; updates every entity (and their components) in the scene. You do not need to call this yourself.</td></tr>
+          <tr><td><code>virtual void Update(const TimeStep&amp; ts)</code></td><td>Override to add scene-level logic that isn't owned by a component (camera follow, input handling, spawning, etc).</td></tr>
+          <tr><td><code>virtual void Render()</code></td><td>Override to issue draw calls for the scene's world geometry.</td></tr>
+          <tr><td><code>virtual void RenderUI()</code></td><td>Override to draw ImGui windows/HUD elements for the scene.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-entity">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">Entity</span>
+          <span class="api-card-tag">Entity.h</span>
+        </div>
+        <p class="api-card-desc">A lightweight container that owns a list of <code class="inline">Component</code> instances. Entities are created via <code class="inline">Scene::CreateEntity</code>, not directly.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Entity(std::string entityName = "Entity")</code></td><td>Constructs an entity with a display name (stored in the public <code class="inline">name</code> field).</td></tr>
+          <tr><td><code>template&lt;typename T, typename... Args&gt;<br>T* AddComponent(Args&amp;&amp;... args)</code></td><td>Constructs a component of type <code class="inline">T</code>, forwarding the given arguments to its constructor, attaches it to this entity, calls its <code class="inline">Start()</code>, and returns a raw pointer to it.</td></tr>
+          <tr><td><code>template&lt;typename T&gt;<br>T* GetComponent()</code></td><td>Returns the first attached component that can be dynamically cast to <code class="inline">T</code>, or <code class="inline">nullptr</code> if none match.</td></tr>
+          <tr><td><code>void Update(const TimeStep&amp; ts)</code></td><td>Calls <code class="inline">Update</code> on every attached component. Invoked automatically by <code class="inline">Scene::UpdateEntities</code>.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-component">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">Component</span>
+          <span class="api-card-tag">Component.h</span>
+        </div>
+        <p class="api-card-desc">Base class for all behaviors attached to an entity. Subclass it to add gameplay logic (movement, health, AI, etc).</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Entity* owner</code></td><td>Pointer back to the entity this component is attached to, set automatically by <code class="inline">Entity::AddComponent</code>.</td></tr>
+          <tr><td><code>virtual void Start()</code></td><td>Called once, immediately after the component is constructed and attached. Override for one-time setup.</td></tr>
+          <tr><td><code>virtual void Update(const TimeStep&amp; ts)</code></td><td>Called every frame via the owning entity. Override to implement per-frame behavior.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-timestep">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::TimeStep</span>
+          <span class="api-card-tag">TimeStep.h</span>
+        </div>
+        <p class="api-card-desc">A plain struct describing frame timing, computed once per frame by <code class="inline">Application::Run()</code> and passed down through <code class="inline">Scene</code>, <code class="inline">Entity</code>, and <code class="inline">Component</code>.</p>
+        <table class="method-table">
+          <tr><th>Field</th><th>Default</th><th>Description</th></tr>
+          <tr><td><code>float Delta</code></td><td><code>0.0f</code></td><td>Frame time in seconds, multiplied by the current time scale. Use this for gameplay logic that should respect pause/slow-motion.</td></tr>
+          <tr><td><code>float Unscaled</code></td><td><code>0.0f</code></td><td>Real, unscaled frame time in seconds. Use this for UI timers, animations, or anything that must ignore the time scale.</td></tr>
+          <tr><td><code>float TimeScale</code></td><td><code>1.0f</code></td><td>The multiplier currently applied to <code class="inline">Delta</code>. Changed via <code class="inline">Application::SetTimeScale</code>.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-input">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Input</span>
+          <span class="api-card-tag">Input.h</span>
+        </div>
+        <p class="api-card-desc">Static keyboard query helper backed by GLFW. Key codes are exposed as <code class="inline">VENERIX_KEY_*</code> macros covering letters, digits, function keys, arrows, and common special keys.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>static bool IsKeyPressed(int keycode)</code></td><td>Returns <code class="inline">true</code> if the given key is currently pressed or held (GLFW <code class="inline">PRESS</code> or <code class="inline">REPEAT</code> state) on the application's current window.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-renderer">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Renderer</span>
+          <span class="api-card-tag">Renderer.h</span>
+        </div>
+        <p class="api-card-desc">Static drawing API built on a fixed cube mesh. Initialized automatically by <code class="inline">Application</code>; you only need to call the draw functions from <code class="inline">Scene::Render</code>.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>static void Init()</code></td><td>Compiles the built-in shaders and sets up vertex buffers. Called automatically by <code class="inline">Application</code>'s constructor.</td></tr>
+          <tr><td><code>static void DrawCube(glm::vec3 position, glm::vec3 scale, glm::vec3 color, glm::mat4 view, glm::mat4 projection)</code></td><td>Draws a single solid-colored cube.</td></tr>
+          <tr><td><code>static void DrawTexturedCube(glm::vec3 position, glm::vec3 scale, const Texture2D* texture, glm::mat4 view, glm::mat4 projection)</code></td><td>Draws a single cube with a texture bound to it.</td></tr>
+          <tr><td><code>static void DrawInstancedCubes(const Texture2D* texture, glm::mat4* matrices, int count, glm::mat4 view, glm::mat4 projection)</code></td><td>Draws many cubes in a single GPU draw call using instancing — pass an array of model matrices (one per cube) and an optional shared texture. Useful for tiled floors, voxel terrain, etc.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-camera">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Camera</span>
+          <span class="api-card-tag">Camera.h</span>
+        </div>
+        <p class="api-card-desc">A simple look-at camera used to compute view and projection matrices for rendering.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Camera()</code></td><td>Constructs a camera with default position <code class="inline">(0, 5, 15)</code>, looking at the origin, 45° FOV, and a 16:9 aspect ratio.</td></tr>
+          <tr><td><code>glm::vec3 Position</code></td><td>World-space position of the camera.</td></tr>
+          <tr><td><code>glm::vec3 Target</code></td><td>World-space point the camera looks at.</td></tr>
+          <tr><td><code>glm::vec3 Up</code></td><td>Up vector used to orient the view.</td></tr>
+          <tr><td><code>float Fov</code></td><td>Vertical field of view, in degrees.</td></tr>
+          <tr><td><code>float AspectRatio</code></td><td>Width divided by height of the render target.</td></tr>
+          <tr><td><code>glm::mat4 GetViewMatrix() const</code></td><td>Returns the view matrix computed from <code class="inline">Position</code>, <code class="inline">Target</code>, and <code class="inline">Up</code>.</td></tr>
+          <tr><td><code>glm::mat4 GetProjectionMatrix() const</code></td><td>Returns the perspective projection matrix computed from <code class="inline">Fov</code> and <code class="inline">AspectRatio</code>.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-texture2d">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Texture2D</span>
+          <span class="api-card-tag">Texture2D.h</span>
+        </div>
+        <p class="api-card-desc">Loads an image file from disk into an OpenGL texture, using stb_image internally.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>Texture2D(const std::string&amp; path)</code></td><td>Loads the image at <code class="inline">path</code> and uploads it to the GPU. Logs an error to the console if loading fails.</td></tr>
+          <tr><td><code>~Texture2D()</code></td><td>Deletes the underlying GPU texture.</td></tr>
+          <tr><td><code>void Bind(unsigned int slot = 0) const</code></td><td>Binds the texture to the given texture unit before drawing.</td></tr>
+          <tr><td><code>void Unbind() const</code></td><td>Unbinds any texture from unit 0.</td></tr>
+          <tr><td><code>int GetWidth() const</code></td><td>Returns the loaded image width, in pixels.</td></tr>
+          <tr><td><code>int GetHeight() const</code></td><td>Returns the loaded image height, in pixels.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="api-audio">
+      <div class="api-card">
+        <div class="api-card-header">
+          <span class="api-card-name">VeneriX::Audio</span>
+          <span class="api-card-tag">Audio.h</span>
+        </div>
+        <p class="api-card-desc">Static audio playback API built on miniaudio. Supports a single looping music track plus one-shot sound effects.</p>
+        <table class="method-table">
+          <tr><th>Member</th><th>Description</th></tr>
+          <tr><td><code>static void Init()</code></td><td>Initializes the audio engine. Called automatically by <code class="inline">Application</code>'s constructor.</td></tr>
+          <tr><td><code>static void Shutdown()</code></td><td>Shuts down the audio engine. Called automatically by <code class="inline">Application</code>'s destructor.</td></tr>
+          <tr><td><code>static void PlaySFX(const std::string&amp; filepath)</code></td><td>Plays a one-shot sound effect from the given file path.</td></tr>
+          <tr><td><code>static void PlayMusic(const std::string&amp; filepath)</code></td><td>Starts playing a music track from the given file path.</td></tr>
+          <tr><td><code>static void StopMusic()</code></td><td>Stops the currently playing music track.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <h2 class="section-title" id="ex-scene"><span class="num">04</span>Examples</h2>
+    <p class="section-desc">Common patterns pulled together into short, focused snippets.</p>
+
+    <h3 class="sub-title">Creating a scene with an entity</h3>
+    <pre><code><span class="tok-kw">class</span> <span class="tok-type">JabaScene</span> : <span class="tok-kw">public</span> <span class="tok-type">Scene</span> {
+<span class="tok-kw">private</span>:
+    <span class="tok-type">Entity</span>* m_PlayerEntity;
+    <span class="tok-type">StarterPlayer</span>* m_Player;
+
+<span class="tok-kw">public</span>:
+    <span class="tok-fn">JabaScene</span>() : <span class="tok-type">Scene</span>(<span class="tok-str">"JabaLevel"</span>) {
+        m_PlayerEntity = <span class="tok-fn">CreateEntity</span>(<span class="tok-str">"Player"</span>);
+        m_Player = m_PlayerEntity-&gt;<span class="tok-fn">AddComponent</span>&lt;<span class="tok-type">StarterPlayer</span>&gt;(
+            <span class="tok-type">glm</span>::<span class="tok-type">vec3</span>(<span class="tok-com">0.0f</span>, <span class="tok-com">10.0f</span>, <span class="tok-com">0.0f</span>)
+        );
+    }
+};</code></pre>
+
+    <h3 class="sub-title" id="ex-component">Writing a custom component</h3>
+    <p class="muted">Components only need to override the hooks they use — both <code class="inline">Start()</code> and <code class="inline">Update()</code> are optional.</p>
+    <pre><code><span class="tok-kw">class</span> <span class="tok-type">StarterPlayer</span> : <span class="tok-kw">public</span> <span class="tok-type">Component</span> {
+<span class="tok-kw">public</span>:
+    <span class="tok-type">glm</span>::<span class="tok-type">vec3</span> Position;
+    <span class="tok-kw">float</span> VelocityY = <span class="tok-com">0.0f</span>;
+    <span class="tok-kw">float</span> Gravity = <span class="tok-com">9.8f</span>;
+    <span class="tok-kw">bool</span> IsGrounded = <span class="tok-kw">false</span>;
+
+    <span class="tok-fn">StarterPlayer</span>(<span class="tok-type">glm</span>::<span class="tok-type">vec3</span> startPos) : Position(startPos) {}
+
+    <span class="tok-kw">void</span> <span class="tok-fn">Update</span>(<span class="tok-kw">const</span> <span class="tok-type">VeneriX</span>::<span class="tok-type">TimeStep</span>&amp; ts) <span class="tok-kw">override</span> {
+        VelocityY -= Gravity * ts.Delta;
+        Position.y += VelocityY * ts.Delta;
+
+        <span class="tok-kw">if</span> (Position.y &lt;= <span class="tok-com">1.0f</span>) {
+            Position.y = <span class="tok-com">1.0f</span>;
+            VelocityY = <span class="tok-com">0.0f</span>;
+            IsGrounded = <span class="tok-kw">true</span>;
+        }
+    }
+
+    <span class="tok-kw">void</span> <span class="tok-fn">Jump</span>() {
+        <span class="tok-kw">if</span> (IsGrounded) {
+            VelocityY = <span class="tok-com">5.0f</span>;
+            IsGrounded = <span class="tok-kw">false</span>;
+        }
+    }
+};</code></pre>
+
+    <h3 class="sub-title" id="ex-input">Handling input in a scene</h3>
+    <pre><code><span class="tok-kw">void</span> <span class="tok-fn">Update</span>(<span class="tok-kw">const</span> <span class="tok-type">VeneriX</span>::<span class="tok-type">TimeStep</span>&amp; ts) <span class="tok-kw">override</span> {
+    <span class="tok-kw">if</span> (<span class="tok-type">VeneriX</span>::<span class="tok-type">Input</span>::<span class="tok-fn">IsKeyPressed</span>(VENERIX_KEY_SPACE) &amp;&amp; m_Player-&gt;IsGrounded) {
+        m_Player-&gt;<span class="tok-fn">Jump</span>();
+        <span class="tok-type">VeneriX</span>::<span class="tok-type">Audio</span>::<span class="tok-fn">PlaySFX</span>(<span class="tok-str">"jump.mp3"</span>);
+    }
+}</code></pre>
+
+    <h3 class="sub-title" id="ex-timescale">Controlling time scale</h3>
+    <p class="muted">The running <code class="inline">Application</code> instance is reachable from anywhere via <code class="inline">Application::Get()</code>, so time scale can be changed from a scene, a component, or UI code.</p>
+    <pre><code><span class="tok-com">// pause the game</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span>::<span class="tok-fn">Get</span>()-&gt;<span class="tok-fn">SetTimeScale</span>(<span class="tok-com">0.0f</span>);
+
+<span class="tok-com">// slow motion</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span>::<span class="tok-fn">Get</span>()-&gt;<span class="tok-fn">SetTimeScale</span>(<span class="tok-com">0.3f</span>);
+
+<span class="tok-com">// back to normal</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Application</span>::<span class="tok-fn">Get</span>()-&gt;<span class="tok-fn">SetTimeScale</span>(<span class="tok-com">1.0f</span>);</code></pre>
+
+    <h3 class="sub-title" id="ex-render">Rendering cubes and textures</h3>
+    <pre><code><span class="tok-kw">void</span> <span class="tok-fn">Render</span>() <span class="tok-kw">override</span> {
+    <span class="tok-type">glm</span>::<span class="tok-type">mat4</span> view = m_Camera.<span class="tok-fn">GetViewMatrix</span>();
+    <span class="tok-type">glm</span>::<span class="tok-type">mat4</span> projection = m_Camera.<span class="tok-fn">GetProjectionMatrix</span>();
+
+    <span class="tok-com">// a tiled floor drawn in a single instanced draw call</span>
+    <span class="tok-type">VeneriX</span>::<span class="tok-type">Renderer</span>::<span class="tok-fn">DrawInstancedCubes</span>(
+        grassTexture, floorMatrices.<span class="tok-fn">data</span>(), floorMatrices.<span class="tok-fn">size</span>(),
+        view, projection
+    );
+
+    <span class="tok-com">// a single solid-colored player cube</span>
+    <span class="tok-type">VeneriX</span>::<span class="tok-type">Renderer</span>::<span class="tok-fn">DrawCube</span>(
+        m_Player-&gt;Position, <span class="tok-type">glm</span>::<span class="tok-type">vec3</span>(<span class="tok-com">1.0f</span>),
+        <span class="tok-type">glm</span>::<span class="tok-type">vec3</span>(<span class="tok-com">0.0f</span>, <span class="tok-com">0.5f</span>, <span class="tok-com">1.0f</span>),
+        view, projection
+    );
+}</code></pre>
+
+    <h3 class="sub-title" id="ex-audio">Playing sound</h3>
+    <pre><code><span class="tok-com">// looping background music, started once in the scene constructor</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Audio</span>::<span class="tok-fn">PlayMusic</span>(<span class="tok-str">"ambient.mp3"</span>);
+
+<span class="tok-com">// a one-shot effect, e.g. triggered on jump</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Audio</span>::<span class="tok-fn">PlaySFX</span>(<span class="tok-str">"jump.mp3"</span>);
+
+<span class="tok-com">// stop the music track</span>
+<span class="tok-type">VeneriX</span>::<span class="tok-type">Audio</span>::<span class="tok-fn">StopMusic</span>();</code></pre>
+
+  </main>
+
+</div>
+
+<footer>
+  <span>VeneriX Engine &mdash; built by thevenerr</span>
+</footer>
+
+<script>
+  const links = document.querySelectorAll('.nav-link');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href')));
+
+  function onScroll() {
+    let current = sections[0];
+    for (const s of sections) {
+      if (s && s.getBoundingClientRect().top <= 100) current = s;
+    }
+    links.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + (current ? current.id : ''));
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+
+</body>
+</html>
